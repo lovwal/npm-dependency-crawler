@@ -15,10 +15,10 @@ react 16.4.2
   fbjs 0.8.16
     core-js 1.0.0
     isomorphic-fetch 2.1.1
-      whatwg-fetch 0.8.2
       node-fetch 1.0.1
         encoding 0.1.11
           iconv-lite ~0.4.4
+      whatwg-fetch 0.8.2
     loose-envify 1.0.0
       js-tokens 1.0.1
     object-assign 4.1.0

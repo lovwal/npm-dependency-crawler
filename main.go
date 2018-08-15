@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 	"time"
 
@@ -68,8 +69,13 @@ func (n *Node) getDependencies(r *registry.Registry, d *registry.Doc) int {
 
 func (n *Node) print(indent string) {
 	fmt.Println(indent+n.Name, n.Version)
+	var pkgs []string
 	for _, node := range n.Dependencies {
-		node.print(indent + "  ")
+		pkgs = append(pkgs, node.Name)
+	}
+	sort.Strings(pkgs)
+	for _, pkg := range pkgs {
+		n.Dependencies[pkg].print(indent + "  ")
 	}
 }
 
