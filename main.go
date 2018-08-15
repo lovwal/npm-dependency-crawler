@@ -74,5 +74,5 @@ func (n *Node) print(indent string) {
 }
 
 func usage() string {
-	return `./npm-crawler <package> [version]`
+	return `./npm-dependency-crawler <package> [version]`
 }
