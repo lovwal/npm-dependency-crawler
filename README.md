@@ -4,6 +4,7 @@ A silly command line tool to view all dependencies and their dependencies for a 
 ### Usage
 ```
 ./npm-dependency-crawler <package> [version]
+    -json output result in json format
 ```
 
 ### Example

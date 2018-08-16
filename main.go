@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"flag"
 	"fmt"
 	"os"
 	"sort"
@@ -11,11 +13,15 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
+	var outputJson bool
+	flag.BoolVar(&outputJson, "json", false, "print output in json")
+	flag.Parse()
+	args := flag.Args()
+	if len(args) < 1 {
 		fmt.Println(usage())
 		return
 	}
-	pkg := os.Args[1]
+	pkg := args[0]
 	r := registry.NewClient("https://skimdb.npmjs.com").Registry()
 
 	d, err := r.GetDoc(pkg)
@@ -24,8 +30,8 @@ func main() {
 		os.Exit(-1)
 	}
 	vers := ""
-	if len(os.Args) > 2 {
-		vers = os.Args[1]
+	if len(args) > 1 {
+		vers = args[1]
 	} else {
 		vers = d.DistTags["latest"]
 	}
@@ -38,7 +44,16 @@ func main() {
 	}
 	dependencies := n.getDependencies(r, d)
 	fmt.Println("Crawl completed in", time.Since(start))
-	n.print("")
+	if outputJson {
+		j, err := json.MarshalIndent(n, "", "\t")
+		if err != nil {
+			fmt.Println("failed to convert result to json:", err)
+		} else {
+			fmt.Println(string(j))
+		}
+	} else {
+		n.print("")
+	}
 	fmt.Println("Total number of dependencies for", n.Name, dependencies)
 }
 
@@ -80,5 +95,6 @@ func (n *Node) print(indent string) {
 }
 
 func usage() string {
-	return `./npm-dependency-crawler <package> [version]`
+	return `./npm-dependency-crawler [flags] <package> [version]
+	-json output result in json format`
 }
